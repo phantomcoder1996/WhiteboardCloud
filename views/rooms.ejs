@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<script type="text/javascript"
+        src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>rooms</title>
+</head>
+
+
+<body onload="loadDoc()">
+
+<div>
+    <ul id="rooms_list">
+
+    </ul>
+</div>
+</body>
+</html>
+
+
+<!--<script>-->
+
+    <!--var socket = io();-->
+
+
+<!--</script>-->
+
+
+<script>
+    //load rooms from database
+    function loadDoc() {
+
+        var rooms = document.getElementById("rooms_list");
+        if(!rooms.children.length) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                    var retreived = JSON.parse(this.responseText);
+                    console.log(retreived.length);
+                    for (var i = 0; i < retreived.length; i++) {
+                       console.log(retreived[i]);
+                        var li = document.createElement("li");
+                        li.setAttribute("display","block");
+                        var linktag = document.createElement("a");
+                        var url = "/rooms/room/" + retreived[i].room_id;
+                        linktag.setAttribute("href", url);
+                        linktag.setAttribute("id", retreived[i].room_id);
+                        linktag.innerHTML = retreived[i].name;
+
+                        // linktag.addEventListener("click", function () {
+                        //     socket.emit('joinRoom', this.id);
+                        // })
+                        li.appendChild(linktag);
+                        rooms.appendChild(linktag);
+
+
+                    }
+
+                }
+            };
+            xhttp.open("GET", "/rooms/get_rooms", false);
+            xhttp.send();
+        }
+    }
+</script>

@@ -1,0 +1,100 @@
+
+<%if(room) %>
+<p>Welcome to <%= room %> </p>
+
+<div id="usermsg"></div>
+<div id="roomNum" hidden="true"><%= room %></div>
+<div id="username" hidden="true"><%= user %></div>
+
+<button id="sharableLink"></button>
+<div id="link" hidden="true" ></div>
+
+<script src="/socket.io/socket.io.js" ></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<!--<script src="../roomView.js" type="text/javascript"></script>-->
+
+<script>
+
+
+
+
+
+
+    //let the server know that the client has join
+
+
+    jQuery(function($){
+
+
+        console.log("executing jquery callback");
+        var $roomID=$('#roomNum');
+        var $userName=$('#username');
+        var $usermsg=$('#usermsg');
+
+        var $link=$('#link');
+        var $shareableLink=$('#sharableLink');
+        console.log(window.location.href);
+        console.log("romid"+$roomID.text());
+
+        //IO name space includes all handling of socket.io on the client side
+
+        var IO=
+            {
+
+                init:function()
+                {
+                    IO.socket=io.connect();
+                    console.log('After socket io');
+                    console.log($('#roomNum').innerHTML);
+                    IO.bindEvents();
+                    console.log($roomID.text()+" from io innit");
+
+                    IO.socket.emit('joinRoom',$roomID.text(),$userName.text());
+
+                }
+                ,
+                bindEvents:function ()
+                {
+                    IO.socket.on('joinRoom',IO.joinRoom);
+                    IO.socket.on('createRoom',IO.createRoom);
+                }
+                ,
+                joinRoom:function(data)
+                {
+                    console.log(data.username+"from joinroom in room.ejs");
+                    $usermsg.text($usermsg.text()+data.username+" has joined the room ");
+                }
+                ,
+                createRoom:function ()
+                {
+
+                }
+
+
+            }
+
+
+        var App=
+            {
+                init:function()
+                {
+                    App.bindEvents();
+                }
+                ,
+                bindEvents:function()
+                {
+                    $('#sharableLink').on('click',App.displaySharedLink);
+
+                }
+                ,
+                displaySharedLink:function()
+                {
+                    $link.text(window.location.href);
+                    $link.toggle();
+                }
+            }
+        IO.init();
+        App.init();
+
+    });
+</script>

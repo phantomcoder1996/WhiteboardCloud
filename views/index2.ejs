@@ -1,0 +1,9 @@
+
+
+<%if(title) %>
+<p>Welcome to <%= title %> </p>
+<% if (!user) { %>
+	<p>Welcome! Please <a href="users/login">log in</a>.</p>
+<% } else { %>
+	<p>Hello, <%= user.username %>. View your <a href="/profile">profile</a>.</p>
+<% } %>

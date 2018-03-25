@@ -1,0 +1,35 @@
+<% if(errors)
+{for(var i=0;i<errors.length;i++){ %>
+<div><%= errors[i].msg %></div>
+<% }}%>
+
+
+<form action="/users/signup" method="post">
+
+
+
+	<div>
+	<label>Username:</label>
+	<input type="text" name="username"/><br/>
+	</div>
+	<div>
+	<label>Password:</label>
+	<input type="password" name="password"/>
+	</div>
+		<div>
+    	<label>Email:</label>
+    	<input type="email" name="email"/>
+    	</div>
+    		<div>
+        	<label>Role:</label>
+        	 <select name="role">
+				 <option value=0 >Teacher</option>
+
+				 <option value=1 >Student</option>
+
+              </select>
+        	</div>
+	<div>
+	<input type="submit" value="Submit"/>
+	</div>
+</form>
