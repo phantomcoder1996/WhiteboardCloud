@@ -1,0 +1,53 @@
+
+<% if(roomid)%>
+<div id="roomid" hidden="true"><%= roomid %></div>
+<% if(roomname) %>
+<div id="roomname" hidden="true"><%= roomname %></div>
+<% if(user) %>
+<div id="userid" hidden="true"><%= user.user_id %></div>
+
+<form action="/rooms/joinRoom" method="post">
+
+    <div>
+        <label>name:</label>
+        <p id="rname"></p>
+    </div>
+    <div>
+        <label>Password:</label>
+        <input type="password" name="password"/>
+    </div>
+    <div hidden="true">
+        <input type="text" name="roomid" id="rid"/>
+
+    </div>
+    <div hidden="true" type="text" >
+
+        <input type="text" name="userid" id="uid"/>
+    </div>
+
+    <div>
+        <input type="submit" value="Submit"/>
+    </div>
+</form>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>
+
+
+
+    jQuery(function($)
+    {
+       var $roomid=$('#roomid');
+       var $roomname=$('#roomname');
+       var $rid=$('#rid');
+       var $rname=$('#rname');
+       var $uid=$('#uid');
+       var $userid=$('#userid');
+
+       $rname.text($roomname.text());
+       $rid.val($roomid.text());
+       $uid.val($userid.text());
+
+    });
+
+
+</script>

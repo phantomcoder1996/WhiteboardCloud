@@ -50,7 +50,8 @@ passport.use(new LocalStrategy(
 
 
     }));
-
+//This function determines what user info shall be stored in the
+//session
 passport.serializeUser(function(user, done) {
     console.log(user.user_id);
     done(null, user.user_id);
@@ -97,13 +98,16 @@ router.post('/signup', function(req, res){
         res.render('signup',{
             errors:errors
         });
+
+        //TODO:Change this to deal with angular
+        //res.status(200).send(errors);
     } else {
 
         db.user.addUser(req,function(err){if(err)throw err;
         });
 
 
-
+//TODO:Change this to deal with angular
         req.flash('success_msg', 'You are registered and can now login');
 
         res.redirect('/users/login');
