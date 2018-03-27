@@ -67,11 +67,36 @@ passport.deserializeUser(function (id,cb) {
 });
 
 router.post('/login',
-    passport.authenticate('local', {successRedirect:'/', failureRedirect:'/users/login',failureFlash: true}),
+    passport.authenticate('local', {passReqToCallback: true,successRedirect:'/users/test', failureRedirect:'/users/testFailure',failureFlash: true}),
     function(req, res) {
 
-        res.redirect('/');
+      res.redirect('/users/test');
+
+      //  res.end(JSON.stringify({"msg":"hi"}));
+
     });
+
+router.get('/test',function(req,res){
+
+    console.log(req.session);
+
+    res.send({"response":1,"userid":req.session.passport.user});
+});
+
+router.get('/testFailure',function(req,res)
+{
+    res.send({"response":0,"userid":-1});
+});
+
+
+
+// router.post('/login',
+//     passport.authenticate('local', function(req,res){
+//         res.status(200).send({"msg": "send info"});
+//         })
+//     );
+//
+
 
 
 
@@ -95,9 +120,11 @@ router.post('/signup', function(req, res){
     var errors = req.validationErrors();
 
     if(errors){
-        res.render('signup',{
-            errors:errors
-        });
+        // res.render('signup',{
+        //     errors:errors
+        // });
+
+        res.status(401).send(errors);
 
         //TODO:Change this to deal with angular
         //res.status(200).send(errors);
@@ -108,9 +135,11 @@ router.post('/signup', function(req, res){
 
 
 //TODO:Change this to deal with angular
-        req.flash('success_msg', 'You are registered and can now login');
+      //  req.flash('success_msg', 'You are registered and can now login');
 
-        res.redirect('/users/login');
+       // res.redirect('/users/login');
+
+        res.status(200).send({response:"success"});
     }
 });
 

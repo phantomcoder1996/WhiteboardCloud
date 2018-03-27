@@ -164,7 +164,7 @@ function(req,res)
 var userid=req.params.userid;
 db.room.getAllUserRooms(userid,function(err,rooms){
 if(err) throw err;
-if(!rooms) res.status('404').send({"msg":"no rooms"});
+if(!rooms) res.status('404').send([]);
 
 res.status('200').send(rooms);
 });
