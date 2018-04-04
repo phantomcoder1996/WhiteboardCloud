@@ -3,7 +3,7 @@ var router = express.Router();
 var http=require('http').Server(express());
 var db=require('../db');
 var bcrypt=require('bcrypt');
-
+var jwt=require('jsonwebtoken');
 
 
 
@@ -86,12 +86,25 @@ res.render('room',{'room':req.params.roomNum,'user':req.user.username});
 
 router.get('/createRoom',function(req,res){res.render('createRoom');});
 
-router.post('/createRoom',function(req,res)
-{
- if(!req.user) res.redirect('/users/login');
+router.post('/test',verifyToken,function(req,res){console.log(req.token);
+console.log("test teest");});
 
- var password=req.body.password;
+router.post('/createRoom',verifyToken,function(req,res)
+{
+// if(!req.user) res.redirect('/users/login');
+
+jwt.verify(req.token,'secretkey',function(err,user)
+{
+console.log("verification sent");
+console.log(req.token+"from jwt .verify");
+if(err) res.sendStatus(401);
+
+     console.log(user);
+
+   var password=req.body.password;
    var roomname=req.body.name;
+  // var password="123";
+
        bcrypt.hash(password,10,function(err,hash){
        if(err) throw err;
        var data={roomname:roomname,password:hash};
@@ -105,10 +118,11 @@ router.post('/createRoom',function(req,res)
                         {
                        // console.log(roomid);
                         if(err) throw err;
-                        var data={username:req.user.username,roomid:roomid[0].room_id};
+                        var data={username:user.username,roomid:roomid[0].room_id};
                         console.log(data);
                         db.room.addMemberToRoom(data,function(err){if(err) throw err;})
 
+//TODO: change this redirection
                         res.redirect('/rooms/room/'+roomid[0].room_id);
                         });
 
@@ -118,21 +132,26 @@ router.post('/createRoom',function(req,res)
 
 
        });
-
+});
 }
+
+
 );
 
 
 router.post('/joinRoom',function(req,res)
 {
-if(!req.user)
+/*if(!req.user)
 {
   res.redirect('users/login');
 
 }
+*/
 
 var roomid=req.body.roomid;
 var password=req.body.password;
+
+
 var userid=req.user.user_id;
 
 var data=
@@ -169,4 +188,27 @@ if(!rooms) res.status('404').send([]);
 res.status('200').send(rooms);
 });
 });
+
+
+
+function verifyToken(req,res,next)
+{
+const bearerHeader= req.headers.authorization;
+console.log(req.headers.authorization);
+if(typeof bearerHeader!='undefined')
+{
+    console.log("bearer header defined");
+    var bearerheader=bearerHeader.split(' ');
+    console.log(bearerheader);
+    const bearerToken=bearerheader[1];
+
+    req.token=bearerToken;
+   console.log(req.token+"from verify token in routes/rooms");
+    next();
+}
+else
+res.sendStatus(403);
+}
+
+
 module.exports = router;

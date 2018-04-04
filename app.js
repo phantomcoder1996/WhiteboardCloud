@@ -12,7 +12,7 @@ var flash=require('connect-flash');
 var expressValidator = require('express-validator');
 var port=process.env.port||3001;
 var whiteBoardApp=require('./WhiteBoardApp.js');
-
+var jwt=require('jsonwebtoken');
 
 
 
@@ -22,6 +22,7 @@ var users = require('./routes/users');
 var rooms = require('./routes/room');
 var login = require('./routes/login');
 var signup= require('./routes/signup');
+var announce=require('./routes/announce');
 
 //Init app
 var app = express();
@@ -79,9 +80,9 @@ app.use(session({secret:'ihatebeingstupidevereverever',
 
     saveUninitialized: true,
     resave: true}));
-
-app.use(passport.initialize());
-app.use(passport.session());
+//
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // Express Validator
 app.use(expressValidator({
@@ -127,6 +128,7 @@ app.use(function (req, res, next) {
 app.use('/', index);
 app.use('/users', users);
 app.use('/rooms',rooms);
+app.use('/announce',announce);
 // error handler
 // app.use(function(err, req, res, next) {
 //   // set locals, only providing error in development
