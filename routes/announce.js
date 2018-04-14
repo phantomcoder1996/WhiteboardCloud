@@ -26,7 +26,7 @@ db.announce.getAnnounce(data,function(err,announce)
 
 
 
-router.get('/store_Announce/:anounce/:roomid',verifyToken,function(req,res)
+router.get('/store_Announce/:anounce/:roomid/:like',verifyToken,function(req,res)
 {
     //var token= req.params.token;
     jwt.verify(req.token,'secretkey',function(err,user)
@@ -39,7 +39,8 @@ router.get('/store_Announce/:anounce/:roomid',verifyToken,function(req,res)
             {
                 anounce: req.params.anounce,
                 userid:user.user_id,
-                roomid: req.params.roomid
+                roomid: req.params.roomid,
+                like:req.params.like
 
 
             }

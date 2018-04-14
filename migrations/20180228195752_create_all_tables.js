@@ -1,7 +1,7 @@
 
 exports.up = function(knex, Promise) {
 
-    return knex.schema.createTable('user_login',function(table)
+   return knex.schema.createTable('user_login',function(table)
     {
         table.increments('user_id');
         table.string('username').notNullable();
@@ -51,7 +51,7 @@ exports.up = function(knex, Promise) {
 exports.down = function(knex, Promise) {
 
 
-    return knex.schema.dropTableIfExists('board_history')
+   return knex.schema.dropTableIfExists('board_history')
         .dropTableIfExists('room_members')
         .dropTableIfExists('snapshots')
         .dropTableIfExists('room')

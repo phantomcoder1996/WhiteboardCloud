@@ -23,6 +23,8 @@ var rooms = require('./routes/room');
 var login = require('./routes/login');
 var signup= require('./routes/signup');
 var announce=require('./routes/announce');
+var comment=require('./routes/comments');
+var profile=require('./routes/profile')
 
 //Init app
 var app = express();
@@ -129,6 +131,8 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/rooms',rooms);
 app.use('/announce',announce);
+app.use('/comments',comment);
+app.use('/profile',profile);
 // error handler
 // app.use(function(err, req, res, next) {
 //   // set locals, only providing error in development
