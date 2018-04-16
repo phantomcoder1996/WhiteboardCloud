@@ -40,6 +40,89 @@ next();
 
 });
 
+//checks if the user is a member of the room
+
+router.get('/isMember/:roomid',verifyToken,function(req,res)
+{
+
+
+
+jwt.verify(req.token,'secretkey',function(err,user)
+{
+console.log(user);
+console.log(user+ "from is member");
+if(err) res.sendStatus(401);
+
+var userid=user.user.id;
+var data={
+room_id:req.params.roomid,
+user_id:userid
+}
+
+db.room.isMemberOfRoom(data,function(err,ismember)
+{
+   if(err) throw err;
+
+   if(ismember)  res.send({member:1});
+   else
+   {
+       res.send({member:0});
+   }
+
+   }
+);
+
+
+});
+
+});
+
+
+
+router.post("/verifyRoomPassword",verifyToken,function(req,res)
+{
+console.log(req);
+            var password = req.body.password;
+            var roomid =  req.body.roomid;
+            var token=req.token;
+            db.room.getRoomPassword(roomid,function(err,roompassword)
+            {
+              if(err) throw err;
+              if(!roompassword) res.sendStatus(404);
+
+
+
+                   //add user to room
+                   jwt.verify(req.token,'secretkey',function(err,user)
+                   {
+                     if(err) throw err;
+
+                     var userid= user.user.id;
+                     var data={roomid:roomid,userid:userid,password:password};
+                     db.room.addMemberToRoom(data,function(err,res1){if(err) throw err;
+
+                     if(res1) res.send({status:1}); //user is member of room
+                     else
+                     res.send({status:0});
+//user is not member of room
+                     });
+
+                   }
+
+
+
+
+                    );
+
+
+
+
+            });
+
+});
+
+
+
 router.use('/room/:roomNum',function(req,res,next)
 {
 //Now we need to check if the user is a member if not he shall be redirected to enter room password
@@ -103,28 +186,32 @@ if(err) res.sendStatus(401);
 
    var password=req.body.password;
    var roomname=req.body.name;
-  // var password="123";
-
+   var userid=user.user.id;
+ // var password="123";
+  //var roomname="cmp5";
        bcrypt.hash(password,10,function(err,hash){
        if(err) throw err;
        var data={roomname:roomname,password:hash};
         db.room.createRoom(data,function(err,notexists){if(err)throw err;
 
         if(!notexists)
-        res.status(404).send({msg:'Room name already exists'});
+        res.status(200).send({msg:0}); //room exists
+
+        else{
 
           //If has been created
                    db.room.getRoomIdByName(roomname,function(err,roomid)
                         {
-                       // console.log(roomid);
+                        console.log(roomid);
                         if(err) throw err;
-                        var data={username:user.username,roomid:roomid[0].room_id};
+                        var data={roomid:roomid[0].room_id,userid:userid,password:password};
                         console.log(data);
                         db.room.addMemberToRoom(data,function(err){if(err) throw err;})
 
 //TODO: change this redirection
-                        res.redirect('/rooms/room/'+roomid[0].room_id);
+                        res.status(200).send({msg:1}); //room created and teacher added
                         });
+              }
 
         });
 
@@ -141,12 +228,7 @@ if(err) res.sendStatus(401);
 
 router.post('/joinRoom',function(req,res)
 {
-/*if(!req.user)
-{
-  res.redirect('users/login');
 
-}
-*/
 
 var roomid=req.body.roomid;
 var password=req.body.password;

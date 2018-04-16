@@ -124,12 +124,20 @@ console.log(req);
                             id:user[0].user_id,
                            // email:user[0].email
                         }
+                    var userinfo=
+                        {
+                            username:username,
+                            student:user[0].student,
+                            picture:user[0].picture,
+                            id:user[0].user_id
+
+                        }
                     jwt.sign({'user':myuser},'secretkey',function(err,token)
                     {
                        // req.headers['authorization']=token;
                         req.headers.authorization=token;
                         console.log("authorization header: "+req.headers.authorization);
-                        res.send({response:token});
+                        res.send({response:token,userInfo:userinfo});
                     });
                 }
                 else
