@@ -45,7 +45,7 @@ var name=data.roomname;
 var password=data.password;
 
 knex.select('name').from('room').where('name',name).then(function(roomname){console.log(roomname+" from createroomdb");
-if(roomname!=null) {console.log("nullroom");return cb(null,false);}
+if(roomname[0]) {console.log("existing room");return cb(null,false);}
 else
 {
 knex('room').insert({name:name,password:password}).then(function(room){ console.log(room);return cb(null,true);}).catch(function(err) {return cb(err);});
@@ -72,14 +72,17 @@ knex.select('password').from('room').where('room_id',roomid).then(
 
 function(userpassword)
 {
+
+console.log(userpassword+"from addMemberToRoom");
                  bcrypt.compare(password,userpassword[0].password,function(err,res)
                  {
 
                      if(err) return cb(err);
                      if(res){console.log('success');
                      //insert the user into the room
-                     knex('room_members').insert({user_id:userid,room_id:roomid}).then(function(){console.log('user '+username+' was added to room '+ roomid);});
+                     knex('room_members').insert({user_id:userid,room_id:roomid}).then(function(){console.log("user is inserted")}).catch(function(err){if(err) {console.log("user was inserted before");}});
                      return cb(null,true);
+                     //true means that the password is correct
 
                      }
                      else
@@ -168,6 +171,7 @@ return cb(null,true);}
 exports.isMemberOfRoom=function(data,cb)
 {
 
+console.log("isMemberofRoom" +data);
 var userid=data.user_id;
 var roomid=data.room_id;
 
@@ -181,7 +185,10 @@ if(!roomids) return cb(null,false);
 for(var i=0;i<roomids.length;i++)
 {
 if(roomids[i].room_id==roomid)//user is a member of that room
+{
+console.log(roomids[i]);
 return cb(null,true);
+}
 
 }
 
@@ -221,3 +228,19 @@ return cb(err);
 
 }
 
+exports.getRoomPassword=function(roomid,cb)
+{
+   knex.select('password').from('room').where('room_id',roomid).then(function(roompassword)
+{
+    if(!roompassword) return cb(null,false);
+
+    console.log(roompassword+" from db.room.getpassword");
+    return cb(null,roompassword[0]);
+
+}
+
+
+).catch(function(err){ return cb(err); });
+
+
+}
