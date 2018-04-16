@@ -36,9 +36,11 @@ function joinRoom(roomID,username)
     this.join(roomID);
     var data=
         {
-            username:username
+            username1:username
         }
-    io.sockets.in(roomID).emit('joinRoom',data);
+   // io.sockets.in(roomID).emit('joinRoom',data);
+
+    clientSocket.in(roomID).broadcast.emit('joinRoom',data);
 }
 
 
