@@ -40,7 +40,7 @@ function joinRoom(roomID,username)
         }
    // io.sockets.in(roomID).emit('joinRoom',data);
 
-    clientSocket.in(roomid).broadcast.emit('joinRoom',data);
+    clientSocket.in(roomID).broadcast.emit('joinRoom',data);
 }
 
 
