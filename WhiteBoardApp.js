@@ -31,7 +31,8 @@ function createRoom(roomID)
 //For teacher or student join Room
 function joinRoom(roomID,username)
 {
-    console.log(roomID+ "from white board app event handler join room");
+    console.log(roomID+ username+"from white board app event handler join room");
+
     this.join(roomID);
     var data=
         {

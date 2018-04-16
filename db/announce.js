@@ -18,7 +18,7 @@ exports.getAnnounce=function(data,cb)
 {
  var room_id=data.id;
  
- knex('annoncments').join('user_login','annoncments.user_id','=','user_login.user_id').join('Comments','Comments.anounce_id','annoncments.anounce_id').where('annoncments.room_id',room_id)
+ knex('annoncments').join('user_login','annoncments.user_id','=','user_login.user_id').join('Comments','Comments.anounce_id','annoncments.anounce_id').where('annoncments.room_id',room_id).select('annoncments.anounce_id','annoncments.anounce_id','annoncments.anounce','annoncments.likes','Comments.comment_id','Comments.comment','annoncments.user_id')
 .then(
 
 function(announce)
