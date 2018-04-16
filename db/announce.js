@@ -17,12 +17,13 @@ var db=require('../db');
 exports.getAnnounce=function(data,cb)
 {
  var room_id=data.id;
+ console.log(room_id);
  
- knex('annoncments').join('user_login','annoncments.user_id','=','user_login.user_id').join('Comments','Comments.anounce_id','annoncments.anounce_id').where('annoncments.room_id',room_id)
+ knex('annoncments').join('Comments','Comments.anounce_id','=','annoncments.anounce_id').where('annoncments.room_id',room_id)
 .then(
-
+    
 function(announce)
-{
+{  console.log(announce);
 if(!announce) return cb(null,false);
 
 return cb(null,announce);

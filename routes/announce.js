@@ -5,7 +5,7 @@ var db=require('../db');
 
 
 
-router.get('/get_Announce/:roomNum',verifyToken,function(req,res)
+router.get('/get_Announce/:roomNum',function(req,res)
 {
 	var data=
 	{
