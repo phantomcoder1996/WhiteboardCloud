@@ -49,6 +49,8 @@ function displayNewMessage(data)
     var message=data.message;
     var roomid=data.roomid;
 
+    console.log(data);
+
     clientSocket.in(roomid).broadcast.emit('new-message',message);
 
 }

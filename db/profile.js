@@ -20,7 +20,7 @@ var user_id=data.userid;
 
 knex('user_login').join('snapshots','snapshots.user_id','=','user_login.user_id').join(
     Knex('room_members').join('room','room.room_id','room_members.room_id').join('user_login','user_login.user_id','room_members.user_id').where('room_members.user_id','=','user_login.user_id')
-).where('user_login.user_id',user_id)
+).where('user_login.user_id',user_id).select('user_login.user_id','snapshots.id','snapshots.shot','user_login.email','user_login.picture','room.name','room.room_id')
 .then(
 
 function(profile)
