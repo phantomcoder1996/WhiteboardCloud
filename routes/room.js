@@ -11,6 +11,8 @@ router.get('/',function(req,res){res.render('rooms');});
 
 router.get('/get_rooms',function(req,res)
 {
+jwt.verify(req.token,'secretkey',function(err,user)
+{
 db.room.getRooms(function(err,room)
 {
 
@@ -18,7 +20,10 @@ db.room.getRooms(function(err,room)
     console.log(room+'hi');
      res.send(room);
 }
-)});
+);});
+
+}
+);
 
 router.use('/room/:roomNum',function(req,res,next){
 //first check if the user is logged in
@@ -186,12 +191,13 @@ if(err) res.sendStatus(401);
 
    var password=req.body.password;
    var roomname=req.body.name;
-   var userid=user.user.id;
+    var description=req.body.description;
+    var userid=user.user.id;
  // var password="123";
   //var roomname="cmp5";
        bcrypt.hash(password,10,function(err,hash){
        if(err) throw err;
-       var data={roomname:roomname,password:hash};
+       var data={roomname:roomname,password:hash,description:description};
         db.room.createRoom(data,function(err,notexists){if(err)throw err;
 
         if(!notexists)
@@ -263,6 +269,7 @@ router.get('/userRooms/:userid',
 function(req,res)
 {
 var userid=req.params.userid;
+console.log(userid+"from user rooms");
 db.room.getAllUserRooms(userid,function(err,rooms){
 if(err) throw err;
 if(!rooms) res.status('404').send([]);
