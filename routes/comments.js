@@ -3,7 +3,7 @@ var router = express.Router();
 var http=require('http').Server(express());
 var db=require('../db');
 
-
+var jwt=require('jsonwebtoken');
 
 router.get('/delete_Comment/:commentid',verifyToken,function(req,res)
 {

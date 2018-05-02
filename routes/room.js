@@ -128,15 +128,19 @@ console.log(req);
 
 
 
-router.use('/room/:roomNum',function(req,res,next)
+
+
+
+
+
+router.use('/room/:roomNum',function(req,res)
 {
 //Now we need to check if the user is a member if not he shall be redirected to enter room password
-var roomid=req.params.roomNum;
-var data=
-{
-room_id:req.params.roomNum,
-user_id:req.user.user_id
-}
+//var roomid=req.params.roomNum;
+
+
+
+if(err) res.sendStatus(401);
 
 db.room.isMemberOfRoom(data,function(err,ismember)
 {
@@ -159,6 +163,7 @@ db.room.isMemberOfRoom(data,function(err,ismember)
    }
 );
 }
+
 );
 
 
@@ -299,5 +304,58 @@ else
 res.sendStatus(403);
 }
 
+
+
+
+//checks if a room exists and if a user is a member of that room
+
+router.get('/isMember2/:roomid',verifyToken,function(req,res)
+{
+
+
+var roomi=req.params.roomid;
+
+jwt.verify(req.token,'secretkey',function(err,user)
+{
+console.log(user);
+console.log(user.user.id+ "from is member2");
+if(err) res.sendStatus(401);
+
+var userid=user.user.id;
+var data={
+room_id:roomi,
+user_id:userid
+}
+console.log(roomi);
+db.room.doesRoomExist(roomi,function(err,uroomid)
+{
+   console.log(uroomid);
+  if(!uroomid) res.send({msg:-1});
+  else
+  {
+
+     db.room.isMemberOfRoom(data,function(err,ismember)
+     {
+        if(err) throw err;
+
+        if(ismember)  res.send({msg:1});
+        else
+        {
+            res.send({msg:0});
+        }
+
+        }
+     );
+
+  }
+
+}
+);
+
+
+
+});
+
+});
 
 module.exports = router;

@@ -3,7 +3,7 @@ var router = express.Router();
 var http=require('http').Server(express());
 var db=require('../db');
 
-
+var jwt=require('jsonwebtoken');
 
 router.get('/get_Announce/:roomNum',function(req,res)
 {
@@ -27,40 +27,40 @@ db.announce.getAnnounce(data,function(err,announce)
 
 
 
-router.get('/store_Announce/:anounce/:roomid/:like',verifyToken,function(req,res)
-
-
-{
-    //var token= req.params.token;
-    jwt.verify(req.token,'secretkey',function(err,user)
-    {
-        console.log("verification sent");
-        console.log(req.token+"from jwt .verify");
-        if(err) res.sendStatus(401);
-
-        var data=
-            {
-
-                anounce: req.params.anounce,
-                userid:user.user_id,
-                roomid: req.params.roomid,
-                like:req.params.like
-
-
-            }
-
-        db.announce.insertAnnounce(data,verifyToken,function(err,announce)
-            {
-
-                if(err) throw err;
-                console.log(announce);
-                //res.send(announce);
-            }
-        );
-    });
-
-
-});
+// router.get('/store_Announce/:anounce/:roomid/:like',verifyToken,function(req,res)
+//
+//
+// {
+//     //var token= req.params.token;
+//     jwt.verify(req.token,'secretkey',function(err,user)
+//     {
+//         console.log("verification sent");
+//         console.log(req.token+"from jwt .verify");
+//         if(err) res.sendStatus(401);
+//
+//         var data=
+//             {
+//
+//                 anounce: req.params.anounce,
+//                 userid:user.user_id,
+//                 roomid: req.params.roomid,
+//                 like:req.params.like
+//
+//
+//             }
+//
+//         db.announce.insertAnnounce(data,verifyToken,function(err,announce)
+//             {
+//
+//                 if(err) throw err;
+//                 console.log(announce);
+//                 //res.send(announce);
+//             }
+//         );
+//     });
+//
+//
+// });
 
 
 
@@ -106,5 +106,45 @@ function verifyToken(req,res,next)
     else
         res.sendStatus(403);
 }
+
+
+
+
+router.post('/store_Announce',verifyToken,function(req,res)
+
+
+{
+    //var token= req.params.token;
+    jwt.verify(req.token,'secretkey',function(err,user)
+    {
+        console.log("verification sent");
+        console.log(req.token+"from jwt .verify");
+        if(err) res.sendStatus(401);
+
+        var data=
+            {
+
+                anounce: req.body.anounce,
+                userid:user.user.id,
+                roomid: req.body.roomid,
+                like:req.body.like
+
+
+            }
+
+        db.announce.insertAnnounce(data,verifyToken,function(err,announce)
+            {
+
+                if(err) {  res.send({response:"-1"}); throw err;}
+                console.log(announce);
+                //res.send(announce);
+
+                res.send({response:"1"});
+            }
+        );
+    });
+
+
+});
 
 module.exports=router;
