@@ -1,19 +1,13 @@
 // var knex=require('./dbConnection.js');
 var bcrypt=require('bcrypt');
 var knex = require('knex')({
-        client: 'mysql',
-        connection: {
-            host : '127.0.0.1',
-            user : 'root',
-            password : '',
-            database : 'WHITEBOARD'
-        },
-        migrations: {
-            tableName: 'knex_migrations'
-        }
+    client: 'sqlite3',
+    connection: {
+        filename: "./WHITEBOARD.sqlite3"
+    },
 
-    }
-);
+    useNullAsDefault: true
+});
 
 exports.findByUserName=function(username,cb) {
     console.log(username);
