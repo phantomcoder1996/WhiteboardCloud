@@ -1,17 +1,11 @@
 var knex = require('knex')({
-    client: 'mysql',
+    client: 'sqlite3',
     connection: {
-        host : '127.0.0.1',
-        user : 'root',
-        password : '',
-        database : 'WHITEBOARD'
+        filename: "./WHITEBOARD.sqlite3"
     },
-    migrations: {
-        tableName: 'knex_migrations'
-    }
 
-}
-);
+    useNullAsDefault: true
+});
 
 var db=require('../db');
 exports.getProfile=function(data,cb)

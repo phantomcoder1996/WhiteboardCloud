@@ -2,45 +2,13 @@
 
 module.exports = {
 
-  development: {
-    client: 'mysql',
-    connection: {
-        database: 'WHITEBOARD',
-        user:     'root',
-        password: ''
+    development: {
+        client: 'sqlite3',
+        connection: {
+            filename: './WHITEBOARD.sqlite3'
+        }
     }
-  },
 
-  staging: {
-    client: 'mysql',
-    connection: {
-      database: 'WHITEBOARD',
-      user:     'root',
-      password: ''
-    },
-    pool: {
-      min: 2,
-      max: 10
-    },
-    migrations: {
-      tableName: 'knex_migrations'
-    }
-  },
 
-  production: {
-    client: 'mysql',                      // 'postgresql',
-    connection: {
-        database: 'localhost//WHITEBOARD',
-      user:     'root',
-      password: ''
-    },
-    pool: {
-      min: 2,
-      max: 10
-    },
-    migrations: {
-      tableName: 'knex_migrations'
-    }
-  }
 
 };
