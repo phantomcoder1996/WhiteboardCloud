@@ -5,7 +5,7 @@ var db=require('../db');
 
 
 
-router.post('/get_profile_picture',verifyToken,function(req,res)
+router.post('/insert_profile_picture',verifyToken,function(req,res)
 {
 	 //var token= req.params.token;
      jwt.verify(req.token,'secretkey',function(err,user)
@@ -13,25 +13,47 @@ router.post('/get_profile_picture',verifyToken,function(req,res)
          console.log("verification sent");
          console.log(req.token+"from jwt .verify");
          if(err) res.sendStatus(401);
- 
+         if (!req.files)
+				return res.status(400).send('No files were uploaded.');
+         var file=req.files.uploaded_image;
          var data=
              {
                 
-                 userid:user.user_id,
+                  userid:user.user_id,
+                 // file1: req.files.uploaded_image,
+		          img_name:file.name
                 
  
  
              }
- 
-         db.profile.UpdateProfilePicture(data,verifyToken,function(err,profile)
-             {
- 
-                 if(err) throw err;
-                 console.log(profile);
-                 res.send(profile);
-             }
-         );
-     });
+             if(file.mimetype == "image/jpeg" ||file.mimetype == "image/png"||file.mimetype == "image/gif" ){
+                                 
+                file.mv('public/images/upload_images/'+file.name, function(err) {
+                               
+                    if (err)
+  
+                      return res.status(500).send(err);
+
+
+
+                      db.profile.UpdateProfilePicture(data,verifyToken,function(err,profile)
+                      {
+          
+                          if(err) throw err;
+                          console.log(profile);
+                          res.send(profile);
+                      }
+                  );
+             
+
+
+
+                      
+                });    
+                
+                
+        }
+    });
  
  
 });
@@ -58,7 +80,7 @@ router.post('/get_Profile',verifyToken,function(req,res)
 
             }
 
-        db.profile.UpdatePassword(data,verifyToken,function(err,profile)
+        db.profile.getProfile(data,verifyToken,function(err,profile)
             {
 
                 if(err) throw err;
@@ -96,7 +118,7 @@ router.post('/update_password/:',verifyToken,function(req,res)
 
           }
 
-      db.profile.getProfile(data,verifyToken,function(err,profile)
+      db.profile.UpdatePassword(data,verifyToken,function(err,profile)
           {
 
               if(err) throw err;
