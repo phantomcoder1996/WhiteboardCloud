@@ -227,6 +227,7 @@ return cb(err);
 
 exports.getRoomPassword=function(roomid,cb)
 {
+console.log(roomid+"password");
    knex.select('password').from('room').where('room_id',roomid).then(function(roompassword)
 {
     if(!roompassword) return cb(null,false);

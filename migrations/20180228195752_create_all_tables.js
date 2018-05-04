@@ -8,7 +8,7 @@ exports.up = function(knex, Promise) {
         table.string('password_digest').notNullable();
         table.string('email').notNullable();
         table.boolean('student').notNullable();
-        table.binary('picture');
+        table.text('picture');
         table.timestamp('created_at');
         table.timestamp('updated_at');
 

@@ -13,6 +13,7 @@ var expressValidator = require('express-validator');
 var port=process.env.port||3001;
 var whiteBoardApp=require('./WhiteBoardApp.js');
 var jwt=require('jsonwebtoken');
+var fileUpload = require('express-fileupload');
 
 
 
@@ -49,6 +50,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(fileUpload());
 
 
 

@@ -81,7 +81,7 @@ exports.UpdateProfilePicture=function(data,cb)
             knex('user_login')
                     .where('user_id', data.id)
                     .update({
-                        picture:data.picture
+                        picture:data.img_name
                     
                     }).then(function(){console.log('picture updated');return cb();});
       
