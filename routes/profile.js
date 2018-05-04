@@ -122,9 +122,9 @@ router.post('/update_password/:',verifyToken,function(req,res)
       db.profile.UpdatePassword(data,verifyToken,function(err,profile)
           {
 
-              if(err) throw err;
-              console.log(profile);
-              res.send(profile);
+              if(err) res.send({response:"-1"});
+             // console.log(profile);
+              res.send({response:"1"});
           }
       );
   });

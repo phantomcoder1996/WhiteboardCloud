@@ -14,7 +14,7 @@ exports.getAnnounce=function(data,cb)
  console.log(room_id);
  
 
- knex('annoncments').join('user_login','annoncments.user_id','=','user_login.user_id').join('Comments','Comments.anounce_id','annoncments.anounce_id').where('annoncments.room_id',room_id).select('annoncments.anounce_id','annoncments.anounce','annoncments.likes','Comments.comment_id','Comments.comment','annoncments.user_id')
+ knex('annoncments').join('user_login','annoncments.user_id','=','user_login.user_id').join('Comments','Comments.anounce_id','annoncments.anounce_id').where('annoncments.room_id',room_id).select('annoncments.anounce_id','annoncments.anounce','annoncments.likes','Comments.comment_id','Comments.comment','annoncments.user_id','user_login.username','user_login.picture')
 
 .then(
     
@@ -56,9 +56,9 @@ exports.insertAnnounce=function(data,cb)
 exports.updateAnnounce=function(data,cb)
 {
     knex('annoncments')
-    .where('anounce_id', data.id)
+    .where('anounce_id',data.anounceid)
 .update({
-    likes:data.like
+    likes:data.likes
   //thisKeyIsSkipped: undefined
 }).then(function(){console.log('anounce like updated');return cb();});
 
