@@ -358,4 +358,15 @@ db.room.doesRoomExist(roomi,function(err,uroomid)
 
 });
 
+
+router.post('/leaveRoom',function(req,res)
+{
+var roomid=req.body.roomid;
+var userid=req.body.userid;
+
+db.room.removeMemberFromRoom(roomid,userid);
+
+});
+
+
 module.exports = router;

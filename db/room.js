@@ -261,3 +261,13 @@ exports.doesRoomExist=function(roomid,cb)
 
 
 }
+
+
+exports.removeMemberFromRoom=function(roomid,userid)
+{
+
+
+knex('room_members').where('room_id',roomid).where('user_id',userid).del().catch(function(err){if(err) console.log("unable to remove user");});
+
+}
+

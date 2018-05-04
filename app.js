@@ -24,7 +24,9 @@ var login = require('./routes/login');
 var signup= require('./routes/signup');
 var announce=require('./routes/announce');
 var comment=require('./routes/comments');
-var profile=require('./routes/profile')
+var profile=require('./routes/profile');
+var screenshots=require('./routes/screenshots');
+var notebook=require('./routes/notebook');
 
 //Init app
 var app = express();
@@ -141,6 +143,8 @@ app.use('/rooms',rooms);
 app.use('/announce',announce);
 app.use('/comments',comment);
 app.use('/profile',profile);
+app.use('/screenshots',screenshots);
+app.use('/notebook',notebook);
 // error handler
 // app.use(function(err, req, res, next) {
 //   // set locals, only providing error in development
@@ -159,27 +163,99 @@ app.use('/profile',profile);
 //     console.log('Server started on port '+app.get('port'));
 // });
 
-io.on('connection',function(socket)
-{
-    // console.log("someone is connected with id= "+socket.id);
-    // socket.emit("connect2");
-    // socket.on('addToRoom',function(data)
-    // {
-    //     console.log(data.username);
-    //     socket.username=data.username;
-    //     var roomname='room'+data.room;
-    //     console.log(roomname);
-    //     console.log(socket.username+'user has joined that room');
-    //     socket.join(roomname,function()
-    //     {
-    //         var rooms=Object.keys(socket.rooms);
-    //         var msg=socket.username+" has joined the room";
-    //         console.log(rooms);
-    //         io.to(roomname).emit('msg',msg);
-    //     });
-    // })
-    whiteBoardApp.initWhiteBoard(socket,io);
+// io.on('connection',function(socket)
+// {
+//     // console.log("someone is connected with id= "+socket.id);
+//     // socket.emit("connect2");
+//     // socket.on('addToRoom',function(data)
+//     // {
+//     //     console.log(data.username);
+//     //     socket.username=data.username;
+//     //     var roomname='room'+data.room;
+//     //     console.log(roomname);
+//     //     console.log(socket.username+'user has joined that room');
+//     //     socket.join(roomname,function()
+//     //     {
+//     //         var rooms=Object.keys(socket.rooms);
+//     //         var msg=socket.username+" has joined the room";
+//     //         console.log(rooms);
+//     //         io.to(roomname).emit('msg',msg);
+//     //     });
+//     // })
+//     whiteBoardApp.initWhiteBoard(socket,io);
+// });
+
+
+
+//Socket functions
+
+
+io.on('connection', function(socket) {
+    console.log('user connected');
+
+socket.on('joinRoom',function(roomId,username,userid){
+    socket.join(roomId);
+console.log(username);
+socket.username = username;	 // we store the username in the socket session for this client
+socket.roomid=roomId;
+//usernames[username] = username;   // add the client's username to the global list
+
+// echo to client they've connected
+// socket.emit('new-user',roomId, 'you have connected');
+//socket.to(roomId).emit('new-user', 'you have connected');
+
+socket.to(roomId).broadcast.emit('newUser',{userName:username,userId:userid} );  // echo globally (all clients) that a person has connected
+console.log({userName:username,userId:userid});
+console.log('emit new');
+//socket.to(roomId).emit('update-users', usernames+"*"+userid);   // update the list of users in chat, client-side
+
 });
+
+
+socket.on('update-chat', function(username,roomId,message,userId){
+    console.log(message);
+io.sockets.to(roomId).emit('update-chat',username, message);
+});
+
+socket.on('newMessage', function(rooomid,username,message,userId) {
+    console.log(message);
+    // io.emit('new-message',message);
+    socket.to(rooomid).broadcast.emit('getMessage',{msg:username+"*"+message,userid:userId});
+});
+
+
+socket.on('newInit', function(room_id,type,color) {
+    console.log('room id init :'+room_id);
+    // io.emit('new-message',message);
+    console.log(type,color);
+    socket.to(room_id).broadcast.emit('getInit2',type+color);
+});
+
+    socket.on('joinBoard',function(roomId,username,userid){
+        socket.join(roomId);
+    console.log(username);
+    socket.username = username;	 // we store the username in the socket session for this client
+    socket.roomid=roomId;
+
+});
+
+
+socket.on('newDraw', function(room_id,type,X,Y) {
+    console.log('room id init :'+room_id);
+    // io.emit('new-message',message);
+    console.log(type,X,Y);
+    socket.to(room_id).broadcast.emit('getDraw',type+""+X+""+Y);
+});
+
+
+socket.on('disconnect',function() {
+    console.log(socket.roomid);
+    socket.to(socket.rooomid).broadcast.emit('disconnected',socket.username);
+});
+});
+
+
+
 
 
 
