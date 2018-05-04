@@ -129,7 +129,8 @@ console.log(req);
                             username:username,
                             student:user[0].student,
                             picture:user[0].picture,
-                            id:user[0].user_id
+                            id:user[0].user_id,
+                            email:user[0].email
 
                         }
                     jwt.sign({'user':myuser},'secretkey',function(err,token)
