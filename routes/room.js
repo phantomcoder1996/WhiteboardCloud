@@ -194,12 +194,12 @@ if(err) res.sendStatus(401);
 
      console.log(user);
 
-   var password=req.body.password;
+  var password=req.body.password;
    var roomname=req.body.name;
-    var description=req.body.description;
+  var description=req.body.description;
     var userid=user.user.id;
- // var password="123";
-  //var roomname="cmp5";
+ //var password="123";
+ // var roomname="cmp5";
        bcrypt.hash(password,10,function(err,hash){
        if(err) throw err;
        var data={roomname:roomname,password:hash,description:description};
@@ -217,10 +217,10 @@ if(err) res.sendStatus(401);
                         if(err) throw err;
                         var data={roomid:roomid[0].room_id,userid:userid,password:password};
                         console.log(data);
-                        db.room.addMemberToRoom(data,function(err){if(err) throw err;})
+                        db.room.addMemberToRoom(data,function(err){if(err) throw err;});
 
 //TODO: change this redirection
-                        res.status(200).send({msg:1}); //room created and teacher added
+                        res.status(200).send({msg:roomid[0].room_id}); //room created and teacher added
                         });
               }
 
