@@ -52,3 +52,22 @@ exports.addUser=function(req,cb) {
         }
     });
 }
+
+exports.getProfile=function(userid,cb)
+{
+    console.log(userid+"userid");
+    knex('user_login').where('user_id',userid).then(function(profile)
+        {
+
+            if(!profile) return cb(null,false);
+
+            else {
+                console.log(profile);
+                return cb(null, profile[0]);
+
+            }
+        }
+
+
+    );
+}

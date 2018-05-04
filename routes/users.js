@@ -115,6 +115,10 @@ console.log(req);
         bcrypt.compare(password,user[0].password_digest,function(err,result)
             {
 
+                // bcrypt.hash('56D6D59352153F0A2F877222FA0C1FB43B6AA4C9BC8ED69AC1ECA5305CF38714',10,function(err,pass){
+                //
+                //     console.log("hashed pass = "+pass);
+                // });
                 if(err) throw err;
                 if(result)
                 {
@@ -141,8 +145,11 @@ console.log(req);
                         res.send({response:token,userInfo:userinfo});
                     });
                 }
-                else
-                    res.send({response:"-1"});
+                else {
+
+                    res.send({response: "-1"});
+
+                }
             }
         );
 

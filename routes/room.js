@@ -287,6 +287,8 @@ res.status('200').send(rooms);
 
 function verifyToken(req,res,next)
 {
+//console.log(req.headers.authorization);
+
 const bearerHeader= req.headers.authorization;
 console.log(req.headers.authorization);
 if(typeof bearerHeader!='undefined')
