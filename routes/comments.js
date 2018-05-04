@@ -67,7 +67,7 @@ router.post('/insert_comment',verifyToken,function(req,res)
 
 
 
-router.post('/update_comment/',verifyToken,function(req,res)
+router.post('/update_comment',verifyToken,function(req,res)
 {
 	var data=
 	{

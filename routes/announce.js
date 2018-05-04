@@ -78,7 +78,7 @@ db.announce.getAnnounce(data,function(err,announce)
 
 
 
-router.post('/del_Announce/',verifyToken,function(req,res)
+router.post('/del_Announce',verifyToken,function(req,res)
 {
 	var data=
 	{
