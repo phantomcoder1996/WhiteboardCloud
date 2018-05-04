@@ -120,14 +120,14 @@ router.post('/update_password',verifyToken,function(req,res)
 
 
           }
-
+console.log(data);
       db.profile.UpdatePassword(data,function(err,profile)
           {
 
 
               if(err) {res.send({res:0});}
 
-              else if(!profile[0]) res.send({res:-1});
+              else if(!profile) res.send({res:-1});
              else{ res.send({res:1});}
 
           }

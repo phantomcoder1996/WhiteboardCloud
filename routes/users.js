@@ -115,7 +115,7 @@ console.log(req);
         bcrypt.compare(password,user[0].password_digest,function(err,result)
             {
 
-                // bcrypt.hash('56D6D59352153F0A2F877222FA0C1FB43B6AA4C9BC8ED69AC1ECA5305CF38714',10,function(err,pass){
+                // bcrypt.hash('56d6d59352153f0a2f877222fa0c1fb43b6aa4c9bc8ed69ac1eca5305cf38714',10,function(err,pass){
                 //
                 //     console.log("hashed pass = "+pass);
                 // });
