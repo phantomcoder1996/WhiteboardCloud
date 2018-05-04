@@ -16,9 +16,11 @@ router.get('/delete_Comment/:commentid',verifyToken,function(req,res)
 db.comments.delComment(data,function(err,comments)
 {
 
-     if(err) throw err;
-     console.log(comments);
-    // res.send(announce);
+    if(err) {  res.send({response:"-1"}); throw err;}
+    console.log(announce);
+    //res.send(announce);
+
+    res.send({response:"1"});
 }
 )});
 
@@ -26,7 +28,7 @@ db.comments.delComment(data,function(err,comments)
 
 
 
-router.get('/insert_comment/:comment/:roomid/:anounceid',verifyToken,function(req,res)
+router.post('/insert_comment',verifyToken,function(req,res)
 {
     //var token= req.params.token;
     jwt.verify(req.token,'secretkey',function(err,user)
@@ -37,10 +39,10 @@ router.get('/insert_comment/:comment/:roomid/:anounceid',verifyToken,function(re
 
         var data=
             {
-                comment: req.params.comment,
+                comment: req.body.comment,
                 userid:user.user_id,
-                roomid: req.params.roomid,
-                anounceid:req.params.anounceid,
+                roomid: req.body.roomid,
+                anounceid:req.body.announceid,
 
 
             }
@@ -48,9 +50,11 @@ router.get('/insert_comment/:comment/:roomid/:anounceid',verifyToken,function(re
         db.comments.insertComment(data,verifyToken,function(err,comments)
             {
 
-                if(err) throw err;
-                console.log(comments);
+                if(err) {  res.send({response:"-1"}); throw err;}
+                console.log(announce);
                 //res.send(announce);
+
+                res.send({response:"1"});
             }
         );
     });
@@ -63,12 +67,12 @@ router.get('/insert_comment/:comment/:roomid/:anounceid',verifyToken,function(re
 
 
 
-router.get('/update_comment/:id/:comment',verifyToken,function(req,res)
+router.post('/update_comment',verifyToken,function(req,res)
 {
 	var data=
 	{
-                id: req.params.id,
-                comment:req.params.comment,
+                id: req.body.commentid,
+                comment:req.body.comment,
                
 	
 	}
@@ -76,9 +80,11 @@ router.get('/update_comment/:id/:comment',verifyToken,function(req,res)
 db.comments.updateComment(data,verifyToken,function(err,comments)
 {
 
-     if(err) throw err;
-     console.log(comments);
-     //res.send(announce);
+    if(err) {  res.send({response:"-1"}); throw err;}
+    console.log(announce);
+    //res.send(announce);
+
+    res.send({response:"1"});
 }
 )});
 

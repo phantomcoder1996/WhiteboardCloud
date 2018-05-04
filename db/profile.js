@@ -55,15 +55,15 @@ exports.UpdatePassword2=function(data,cb)
                 console.log(profile);
             if(!profile) return cb(null,false);
             else {
-                bcrypt.hash(data.password, 10, function (err, hash) {
+                bcrypt.hash(data.password, 10, function (err, hash1) {
                     if (err){console.log(err); return cb(err);}
                     else {
             
-                        console.log(hash);
+                        console.log(hash1);
                         knex('user_login')
                                 .where('user_id', data.id)
                                 .update({
-                                    password_digest:hash
+                                    password_digest:hash1
                               
                                 }).then(function(){console.log('password updated');return cb();});
                   

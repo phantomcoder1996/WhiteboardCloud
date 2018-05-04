@@ -5,8 +5,15 @@ var db=require('../db');
 
 var jwt=require('jsonwebtoken');
 
-router.get('/get_Announce/:roomNum',function(req,res)
+router.get('/get_Announce/:roomNum',verifyToken,function(req,res)
 {
+    jwt.verify(req.token,'secretkey',function(err,user)
+    {
+        console.log("verification sent");
+        console.log(req.token+"from jwt .verify");
+        if(err) res.sendStatus(401);
+
+
 	var data=
 	{
 	id:req.params.roomNum,
@@ -20,7 +27,11 @@ db.announce.getAnnounce(data,function(err,announce)
      console.log(announce);
      res.send(announce);
 }
-)});
+)
+
+});
+
+});
 
 
 
@@ -67,11 +78,11 @@ db.announce.getAnnounce(data,function(err,announce)
 
 
 
-router.get('/del_Announce/:id',verifyToken,function(req,res)
+router.post('/del_Announce',verifyToken,function(req,res)
 {
 	var data=
 	{
-		        id:  req.params.id,
+		        id:  req.body.announceid,
                
 	
 	}
@@ -79,9 +90,11 @@ router.get('/del_Announce/:id',verifyToken,function(req,res)
 db.announce.delAnnounce(data,verifyToken,function(err,announce)
 {
 
-     if(err) throw err;
-     console.log(announce);
-     //res.send(announce);
+    if(err) {  res.send({response:"-1"}); throw err;}
+                console.log(announce);
+                //res.send(announce);
+
+                res.send({response:"1"});
 }
 )});
 
@@ -146,5 +159,54 @@ router.post('/store_Announce',verifyToken,function(req,res)
 
 
 });
+
+
+
+
+
+
+
+
+
+
+router.post('/udate_Announce',verifyToken,function(req,res)
+
+
+{
+    //var token= req.params.token;
+    jwt.verify(req.token,'secretkey',function(err,user)
+    {
+        console.log("verification sent");
+        console.log(req.token+"from jwt .verify");
+        if(err) res.sendStatus(401);
+
+        var data=
+            {
+
+                anounceid: req.body.announceid,
+                likes:req.body.likes
+
+
+            }
+
+  //thisKeyIsSkipped: undefined
+        db.announce.insertAnnounce(data,verifyToken,function(err,announce)
+            {
+
+                if(err) {  res.send({response:"-1"}); throw err;}
+                console.log(announce);
+                //res.send(announce);
+
+                res.send({response:"1"});
+            }
+        );
+    });
+
+
+});
+
+
+
+
 
 module.exports=router;
