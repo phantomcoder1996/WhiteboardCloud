@@ -115,10 +115,10 @@ console.log(req);
         bcrypt.compare(password,user[0].password_digest,function(err,result)
             {
 
-                // bcrypt.hash('56d6d59352153f0a2f877222fa0c1fb43b6aa4c9bc8ed69ac1eca5305cf38714',10,function(err,pass){
-                //
-                //     console.log("hashed pass = "+pass);
-                // });
+                bcrypt.hash('56d6d59352153f0a2f877222fa0c1fb43b6aa4c9bc8ed69ac1eca5305cf38714',10,function(err,pass){
+
+                    console.log("hashed pass = "+pass);
+                });
                 if(err) throw err;
                 if(result)
                 {
@@ -180,14 +180,23 @@ router.post('/signup', function(req, res){
         // res.render('signup',{
         //     errors:errors
         // });
+      var err=[];
 
-        res.status(401).send(errors);
+      for(var i=0;i<errors.length;i++)
+        {
+            err.push(errors[i].msg);
+        }
 
         //TODO:Change this to deal with angular
-        //res.status(200).send(errors);
+         res.status(200).send({response:err});
     } else {
 
-        db.user.addUser(req,function(err){if(err)throw err;
+        db.user.addUser(req,function(err,status){
+
+            if(err)throw err;
+            else if(status==1)res.status(200).send({response:["1"]});
+            else if(status==-1) res.status(200).send({response:["User already exists"]});
+
         });
 
 
@@ -196,7 +205,7 @@ router.post('/signup', function(req, res){
 
        // res.redirect('/users/login');
 
-        res.status(200).send({response:"success"});
+
     }
 });
 

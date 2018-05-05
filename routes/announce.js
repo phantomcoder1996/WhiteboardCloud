@@ -132,16 +132,19 @@ router.post('/store_Announce',verifyToken,function(req,res)
                 like:req.body.like
 
 
+
+
+
             }
 
         db.announce.insertAnnounce(data,function(err,announce)
             {
 
-                if(err) {  res.send({response:"-1"}); throw err;}
-                console.log(announce);
+                if(err) {  res.send({response:-1}); throw err;}
+            //    console.log(announce);
                 //res.send(announce);
 
-                res.send({response:"1"});
+                else res.send({response:announce});
             }
         );
     });

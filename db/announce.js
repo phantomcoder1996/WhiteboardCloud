@@ -52,7 +52,19 @@ exports.insertAnnounce=function(data,cb)
                 user_id: data.userid,
                 room_id: data.roomid,
                 likes:data.like
-            }).then(function(){console.log('anounce inserted');return cb(null,"worked");});
+            }).then(function(){
+
+
+                //console.log('anounce inserted');return cb(null,"worked");
+            knex('annoncments').max('anounce_id as m').then(function(maximum)
+            {
+                if(maximum!=null){console.log(maximum); return cb(null,maximum[0].m);}
+                else return cb(err);
+            })
+
+
+
+            });
 
 }
 exports.updateAnnounce=function(data,cb)

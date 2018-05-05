@@ -45,7 +45,8 @@ exports.addUser=function(req,cb) {
                 password_digest: hash,
                 email: req.body.email,
                 student: req.body.role
-            }).then(function(){console.log('user inserted');return cb();});
+            }).then(function(){console.log('user inserted');return cb(null,1);})
+                .catch(function(){return cb(null,-1);});
 
             // knex('user_login').insert({username:req.body.username,password:req.body.password_digest,email:req.body.email,role:req.body.role})
             //     .then(function(){console.log('user successfully added')});
