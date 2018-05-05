@@ -8,11 +8,11 @@ var knex = require('knex')({
     useNullAsDefault: true
 });
 
-exports.insert=function (content,user_id)
+exports.insert=function (content,user_id,room_id,name)
 {
     knex('notebook').insert(
         {
-            content:content,user_id:user_id
+            content:content,user_id:user_id,room_id:room_id,name:name
         }
     )
         .then(function(res){
@@ -22,13 +22,16 @@ exports.insert=function (content,user_id)
 
 
 }
-exports.getNotes=function (user_id,cb)
+exports.getNotes=function (user_id,room_id,cb)
 {
-    knex.select('*').from('notebook')
-        .where('user_id',user_id)
+    console.log(user_id,room_id);
+    knex('notebook').where({
+        user_id: user_id,
+        room_id: room_id
+    }).select('*')
         .then(function(res)
         {
-            //  console.log(res);
+
             return cb(null,res);
         });
 

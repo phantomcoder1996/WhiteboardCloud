@@ -91,6 +91,12 @@ exports.UpdatePassword=function(data,cb)
 
     db.user.getProfile(userid,function(err,profile)
         {
+<<<<<<< HEAD
+=======
+            bcrypt.hash(oldpassword,10,function (err,h) {
+               console.log("old pass= "+h);
+            });
+>>>>>>> 49fc1acd3d0acd1a7e66f5a50ad9336a6d0ee16b
 
             if(err) return cb(err);
             bcrypt.compare(oldpassword,profile.password_digest,function (err,res) {
@@ -99,19 +105,31 @@ exports.UpdatePassword=function(data,cb)
 
                 if(res)
                 {
+<<<<<<< HEAD
 
+=======
+                     console.log("passwords are similar" );
+>>>>>>> 49fc1acd3d0acd1a7e66f5a50ad9336a6d0ee16b
                     bcrypt.hash(password, 10, function (err, hash) {
                         if (err){ return cb(err);}
                         else {
 
+<<<<<<< HEAD
 
+=======
+             console.log("new pass"+hash);
+>>>>>>> 49fc1acd3d0acd1a7e66f5a50ad9336a6d0ee16b
 
                             knex('user_login')
                                 .where('user_id',userid)
                                 .update({
                                     password_digest:hash
 
+<<<<<<< HEAD
                                 }).then(function(){console.log('password updated');return cb(null,profile)});
+=======
+                                }).then(function(){console.log('password updated');return cb(null,true)});
+>>>>>>> 49fc1acd3d0acd1a7e66f5a50ad9336a6d0ee16b
 
 
                         }
