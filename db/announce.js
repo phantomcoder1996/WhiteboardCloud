@@ -14,7 +14,7 @@ exports.getAnnounce=function(data,cb)
  console.log(room_id);
  
 
- knex('annoncments').join('user_login','annoncments.user_id','=','user_login.user_id').join('Comments','Comments.anounce_id','annoncments.anounce_id').where('annoncments.room_id',room_id).select('annoncments.anounce_id','annoncments.anounce','annoncments.likes','Comments.comment_id','Comments.comment','annoncments.user_id','user_login.username','user_login.picture')
+ knex('annoncments').join('user_login','annoncments.user_id','=','user_login.user_id').join('Comments','Comments.anounce_id','annoncments.anounce_id').where('annoncments.room_id',room_id).select('annoncments.anounce_id','annoncments.anounce','annoncments.likes','Comments.comment_id','Comments.comment','annoncments.user_id','user_login.username','user_login.picture','Comments.commenter_picture','Comments.commenter_name')
 
 .then(
     
@@ -37,7 +37,9 @@ return cb(err);
 
 exports.delAnnounce=function(data,cb)
 { 
-knex('annoncments').where('anounce_id',data.id).del()
+knex('annoncments').where(function() {
+    this.where('anounce_id',data.id).andWhere('user_id', data.userid)
+}).del()
 .then(function(){console.log('anounce deleted');return cb();});
 
 }
@@ -50,13 +52,15 @@ exports.insertAnnounce=function(data,cb)
                 user_id: data.userid,
                 room_id: data.roomid,
                 likes:data.like
-            }).then(function(){console.log('anounce inserted');return cb();});
+            }).then(function(){console.log('anounce inserted');return cb(null,"worked");});
 
 }
 exports.updateAnnounce=function(data,cb)
 {
-    knex('annoncments')
-    .where('anounce_id',data.anounceid)
+    knex('annoncments').where
+        ('anounce_id','=',data.anounceid)
+    
+    
 .update({
     likes:data.likes
   //thisKeyIsSkipped: undefined

@@ -8,13 +8,19 @@ var knex = require('knex')({
 });
 
 var db=require('../db');
+var bcrypt=require('bcrypt');
 exports.getProfile=function(data,cb)
 {
 var user_id=data.userid;
-
-knex('user_login').join('snapshots','snapshots.user_id','=','user_login.user_id').join(
-    Knex('room_members').join('room','room.room_id','room_members.room_id').join('user_login','user_login.user_id','room_members.user_id').where('room_members.user_id','=','user_login.user_id')
-).where('user_login.user_id',user_id).select('user_login.user_id','snapshots.id','snapshots.shot','user_login.email','user_login.picture','room.name','room.room_id')
+//.leftJoin('snapshots','snapshots.user_id','=','user_login.user_id')
+//,'snapshots.id','snapshots.shot'
+    knex('user_login').leftJoin('snapshots','snapshots.user_id','=','user_login.user_id').leftJoin('room','room.room_id','room_members.room_id').leftJoin('room_members','user_login.user_id','room_members.user_id')
+  //  )
+// knex('user_login').join('snapshots','snapshots.user_id','=','user_login.user_id').join(
+//     Knex('room_members').join('room','room.room_id','room_members.room_id').join('user_login','user_login.user_id','room_members.user_id').where('room_members.user_id','=','user_login.user_id')
+// )
+//
+.select('user_login.user_id','user_login.email','user_login.picture','room.name','room.room_id','snapshots.id','snapshots.shot').where('user_login.user_id',user_id)
 .then(
 
 function(profile)
@@ -34,7 +40,7 @@ return cb(err);
 }
 
 
-exports.UpdatePassword=function(data,cb)
+exports.UpdatePassword2=function(data,cb)
 { 
     bcrypt.hash(data.oldpassword, 10, function (err, hash) {
 
@@ -45,18 +51,19 @@ exports.UpdatePassword=function(data,cb)
            .then(
 
             function(profile)
-            {
+            { console.log(data);
+                console.log(profile);
             if(!profile) return cb(null,false);
             else {
-                bcrypt.hash(data.password, 10, function (err, hash1) {
+                bcrypt.hash(data.password, 10, function (err, hash) {
                     if (err){console.log(err); return cb(err);}
                     else {
             
-                        console.log(hash1);
+                        console.log(hash);
                         knex('user_login')
                                 .where('user_id', data.id)
                                 .update({
-                                    password_digest:hash1
+                                    password_digest:hash
                               
                                 }).then(function(){console.log('password updated');return cb();});
                   
@@ -71,6 +78,64 @@ exports.UpdatePassword=function(data,cb)
    
      }
 });
+}
+
+
+
+exports.UpdatePassword=function(data,cb)
+{
+
+    var password=data.password;
+    var userid=data.userid;
+    var oldpassword=data.oldpassword;
+
+    db.user.getProfile(userid,function(err,profile)
+        {
+
+            if(err) return cb(err);
+            bcrypt.compare(oldpassword,profile.password_digest,function (err,res) {
+
+                if(err) return cb(err);
+
+                if(res)
+                {
+
+                    bcrypt.hash(password, 10, function (err, hash) {
+                        if (err){ return cb(err);}
+                        else {
+
+
+
+                            knex('user_login')
+                                .where('user_id',userid)
+                                .update({
+                                    password_digest:hash
+
+                                }).then(function(){console.log('password updated');return cb(null,profile)});
+
+
+                        }
+
+                    });
+                }
+
+                else
+                {return cb(null,false);
+
+                }
+
+
+
+            });
+
+
+        }
+
+    );
+
+
+
+
 }
 
 exports.UpdateProfilePicture=function(data,cb)

@@ -6,10 +6,15 @@ var db=require('../db');
 var jwt=require('jsonwebtoken');
 
 router.get('/delete_Comment/:commentid',verifyToken,function(req,res)
-{
+  {  jwt.verify(req.token,'secretkey',function(err,user)
+        {
+            console.log("verification sent");
+            console.log(req.token+"from jwt .verify");
+            if(err) res.sendStatus(401);
 	var data=
 	{
-	id:req.params.commentid,
+    id:req.params.commentid,
+    userid:user.user_id,
 
 	}
 
@@ -17,12 +22,15 @@ db.comments.delComment(data,function(err,comments)
 {
 
     if(err) {  res.send({response:"-1"}); throw err;}
-    console.log(announce);
+    console.log(comments);
     //res.send(announce);
 
     res.send({response:"1"});
 }
-)});
+)
+
+});
+});
 
 
 
@@ -36,22 +44,24 @@ router.post('/insert_comment',verifyToken,function(req,res)
         console.log("verification sent");
         console.log(req.token+"from jwt .verify");
         if(err) res.sendStatus(401);
-
+              console.log(user.user.id+"user id");
         var data=
             {
                 comment: req.body.comment,
-                userid:user.user_id,
+                userid:user.user.id,
                 roomid: req.body.roomid,
                 anounceid:req.body.announceid,
+                comment_name:req.body.username,
+                comment_pic:req.body.userpic,
 
 
             }
 
-        db.comments.insertComment(data,verifyToken,function(err,comments)
+        db.comments.insertComment(data,function(err,comments)
             {
 
                 if(err) {  res.send({response:"-1"}); throw err;}
-                console.log(announce);
+                console.log(comments);
                 //res.send(announce);
 
                 res.send({response:"1"});
@@ -68,25 +78,34 @@ router.post('/insert_comment',verifyToken,function(req,res)
 
 
 router.post('/update_comment',verifyToken,function(req,res)
+{  jwt.verify(req.token,'secretkey',function(err,user)
 {
+    console.log("verification sent");
+    console.log(req.token+"from jwt .verify");
+    if(err) res.sendStatus(401);
+          console.log(user.user.id+"user id");
 	var data=
 	{
                 id: req.body.commentid,
                 comment:req.body.comment,
+                userid:user.user_id,
                
 	
 	}
 
-db.comments.updateComment(data,verifyToken,function(err,comments)
+db.comments.updateComment(data,function(err,comments)
 {
 
     if(err) {  res.send({response:"-1"}); throw err;}
-    console.log(announce);
+    console.log(comments);
     //res.send(announce);
 
     res.send({response:"1"});
 }
-)});
+)
+});
+
+});
 
 
 
